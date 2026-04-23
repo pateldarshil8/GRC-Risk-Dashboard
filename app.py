@@ -1,81 +1,60 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import requests
-from datetime import datetime
 
-# --- CONFIGURATION ---
-st.set_page_config(page_title="GRC Risk Dashboard", layout="wide")
-CISA_KEV_URL = "https://www.cisa.gov/sites/default/files/csv/known_exploited_vulnerabilities.csv"
+# --- CONFIG ---
+st.set_page_config(page_title="GRC CVE Dashboard", layout="wide")
+CISA_URL = "https://www.cisa.gov/sites/default/files/csv/known_exploited_vulnerabilities.csv"
 
-# --- DATA LOADING ---
-@st.cache_data(ttl=86400)
-def load_cisa_intel():
+# --- DATA ENGINES ---
+@st.cache_data(ttl=3600)
+def get_intel():
+    return pd.read_csv(CISA_URL)
+
+def get_local():
     try:
-        return pd.read_csv(CISA_KEV_URL)
+        df = pd.read_csv("vulnerabilities.csv")
+        df['CVSS_Score'] = pd.to_numeric(df['CVSS_Score'], errors='coerce')
+        return df.dropna(subset=['CVSS_Score'])
     except:
         return pd.DataFrame()
 
-def load_local_data():
-    try:
-        df = pd.read_csv("vulnerabilities.csv")
-        # Ensure CVSS is numeric for calculations
-        df['CVSS_Score'] = pd.to_numeric(df['CVSS_Score'], errors='coerce')
-        return df.dropna(subset=['CVSS_Score'])
-    except Exception as e:
-        st.error(f"Error loading vulnerabilities.csv: {e}")
-        return pd.DataFrame()
+# --- APP LAYOUT ---
+st.title("🛡️ Enterprise GRC: CVE Intelligence Dashboard")
 
-# --- MAIN LOGIC ---
-st.title("🛡️ Enterprise GRC & Vulnerability Dashboard")
-
-df_scan = load_local_data()
-df_kev = load_cisa_intel()
+df_scan = get_local()
+df_kev = get_intel()
 
 if not df_scan.empty:
-    # Cross-reference with CISA KEV
-    if not df_kev.empty:
-        df_scan['Is_Actively_Exploited'] = df_scan['Vulnerability'].apply(
-            lambda x: any(df_kev['vulnerabilityName'].str.contains(str(x), case=False, na=False))
-        )
-    else:
-        df_scan['Is_Actively_Exploited'] = False
+    # PRECISION MATCHING: Check if local CVE_ID exists in CISA cveID column
+    cisa_cves = df_kev['cveID'].unique()
+    df_scan['Is_Actively_Exploited'] = df_scan['CVE_ID'].isin(cisa_cves)
 
-    # --- KPI METRICS ---
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Total Risks", len(df_scan))
-    col2.metric("Avg CVSS", round(df_scan['CVSS_Score'].mean(), 1))
-    
-    exploited_count = df_scan['Is_Actively_Exploited'].sum()
-    col3.metric("Actively Exploited", exploited_count, delta=int(exploited_count), delta_color="inverse")
-    
-    # Simple Compliance Score
-    compliance = max(0, 100 - (len(df_scan[df_scan['Severity'].isin(['Critical', 'High'])]) * 10))
-    col4.metric("Compliance Score", f"{compliance}%")
+    # Metrics
+    total = len(df_scan)
+    exploited = df_scan['Is_Actively_Exploited'].sum()
+    avg_risk = df_scan['CVSS_Score'].mean()
 
-    # --- ALERTS ---
-    if exploited_count > 0:
-        st.error(f"🔥 IMMEDIATE ACTION REQUIRED: {exploited_count} vulnerabilities match the CISA KEV catalog!")
+    m1, m2, m3 = st.columns(3)
+    m1.metric("Total Assets Flagged", total)
+    m2.metric("Average CVSS Risk", round(avg_risk, 1))
+    m3.metric("Actively Exploited (CISA)", int(exploited), delta=int(exploited), delta_color="inverse")
 
-    # --- VISUALS ---
+    if exploited > 0:
+        st.error(f"🚨 CRITICAL: {exploited} detected CVEs are on the CISA 'Known Exploited' list. Patching is mandated by BOD 22-01.")
+
+    # Charts
     c1, c2 = st.columns(2)
-    
     with c1:
-        st.subheader("Severity Distribution")
-        fig_pie = px.pie(df_scan, names='Severity', hole=0.4,
-                         color='Severity',
-                         color_discrete_map={'Critical':'red', 'High':'orange', 'Medium':'yellow', 'Low':'blue'})
-        st.plotly_chart(fig_pie, use_container_width=True)
-        
+        fig = px.pie(df_scan, names='Severity', hole=0.5, title="Risk Severity Breakdown",
+                     color='Severity', color_discrete_map={'Critical':'red','High':'orange','Medium':'yellow','Low':'blue'})
+        st.plotly_chart(fig, use_container_width=True)
     with c2:
-        st.subheader("NIST CSF Category Coverage")
-        fig_bar = px.bar(df_scan.groupby('NIST_Category').size().reset_index(name='Count'), 
-                         x='NIST_Category', y='Count', color='NIST_Category')
-        st.plotly_chart(fig_bar, use_container_width=True)
+        fig2 = px.bar(df_scan, x='NIST_Category', color='Severity', title="NIST Framework Coverage")
+        st.plotly_chart(fig2, use_container_width=True)
 
-    # --- DATA TABLE ---
-    st.subheader("Live Risk Register")
-    st.dataframe(df_scan, use_container_width=True)
+    st.subheader("Inventory & CVE Tracking")
+    st.dataframe(df_scan.style.highlight_between(subset=['CVSS_Score'], left=9.0, right=10.0, color='darkred'), use_container_width=True)
 
 else:
-    st.info("Dashboard is ready. Please run your scanner to populate data.")
+    st.info("No data found. Please run scanner.py on your Ubuntu/Kali environment.")
