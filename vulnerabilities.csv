@@ -1,3 +1,2 @@
-Asset_IP,Vulnerability,Severity,CVSS_Score,NIST_Category,Status,Scan_Date
-192.168.56.106,Cisco Catalyst SD-WAN Manager Incorrect Use of Privileged APIs Vulnerability,Medium,5.0,PR.DS,Open,2026-04-23 01:29:39
-192.168.56.106,FTP Plaintext,High,7.0,PR.DS,Open,2026-04-23 01:33:01
+Asset_IP,Vulnerability,Severity,CVSS_Score,NIST_Category,Status,Scan_Date,CVE_ID
+192.168.56.106,Insecure HTTP (Apache),Critical,9.8,PR.DS,Open,2026-04-23 12:55:41,CVE-2021-41773
