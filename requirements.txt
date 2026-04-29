@@ -1,4 +1,6 @@
 streamlit
 pandas
 plotly
+python-nmap
 requests
+xlsxwriter
