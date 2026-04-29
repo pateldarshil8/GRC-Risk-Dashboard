@@ -1,2 +1,13 @@
-Asset_IP,Vulnerability,Severity,CVSS_Score,NIST_Category,Status,Scan_Date,CVE_ID
-192.168.56.106,Insecure HTTP (Apache),Critical,9.8,PR.DS,Open,2026-04-23 12:55:41,CVE-2021-41773
+Asset_IP,Vulnerability,Severity,CVSS_Score,NIST_Category,Status,Scan_Date,CVE_ID,Date_Remediated
+192.168.1.10,Apache Path Traversal,Critical,9.8,PR.DS,Remediated,1/5/2026,CVE-2021-41773,1/12/2026
+192.168.1.11,Telnet Enabled,Critical,9,PR.AC,Remediated,1/8/2026,CVE-1999-0619,1/20/2026
+192.168.1.12,Log4Shell RCE,Critical,10,PR.DS,Open,1/15/2026,CVE-2021-44228,
+192.168.1.13,FTP Plaintext Auth,High,7.5,PR.DS,Remediated,1/10/2026,CVE-1999-0497,1/28/2026
+192.168.1.14,OpenSSL Heartbleed,High,7.5,PR.DS,Remediated,1/20/2026,CVE-2014-0160,2/5/2026
+192.168.1.15,MS Exchange ProxyShell,Critical,9.8,PR.AC,Open,2/1/2026,CVE-2021-34473,
+192.168.1.16,SMB EternalBlue,High,8.1,ID.AM,Remediated,2/5/2026,CVE-2017-0144,2/20/2026
+192.168.1.17,SSH Weak Cipher Config,Medium,5.3,PR.AC,Remediated,2/10/2026,CVE-2023-48795,3/15/2026
+192.168.1.18,SSL/TLS POODLE Attack,Medium,4.3,PR.DS,Open,2/15/2026,CVE-2014-3566,
+192.168.1.19,Redis No-Auth Exposure,High,9.8,PR.AC,Remediated,3/1/2026,CVE-2022-0543,3/20/2026
+192.168.1.20,PHP Remote File Inclusion,High,8.8,PR.DS,Open,3/10/2026,CVE-2023-3824,
+192.168.1.21,Samba Heap Overflow,Medium,6.5,ID.AM,Remediated,3/15/2026,CVE-2021-44142,4/10/2026
