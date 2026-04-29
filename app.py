@@ -154,7 +154,7 @@ def render_sla_breach_alerts(df):
             "Days_Open", "SLA_Limit", "Days_Overdue"]
     cols = [c for c in cols if c in breached.columns]
 
-   def _color_overdue(val):
+def _color_overdue(val):
         if val > 60:  return "background-color:#E24B4A;color:white"
         if val > 30:  return "background-color:#EF9F27"
         if val > 0:   return "background-color:#FAC775"
