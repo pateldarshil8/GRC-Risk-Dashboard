@@ -413,7 +413,7 @@ def render_compliance(df):
         )
         iso_summary["Avg_CVSS"] = iso_summary["Avg_CVSS"].round(1)
 
-        unique_domains = df["ISO_Control"] != "Not mapped"]["ISO_Control"].nunique()
+        unique_domains = df["ISO_Control"] != ["Not mapped"]["ISO_Control"].nunique()
         total_domains  = 14  # ISO 27001 has 14 Annex A domains
         iso_pct = int((unique_domains / total_domains) * 100)
 
