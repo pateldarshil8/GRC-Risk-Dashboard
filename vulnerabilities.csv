@@ -11,3 +11,6 @@ Asset_IP,Vulnerability,Severity,CVSS_Score,NIST_Category,Status,Scan_Date,CVE_ID
 192.168.1.19,Redis No-Auth Exposure,High,9.8,PR.AC,Remediated,3/1/2026,CVE-2022-0543,3/20/2026,4,5,3
 192.168.1.20,PHP Remote File Inclusion,High,8.8,PR.DS,Open,3/10/2026,CVE-2023-3824,,4,4,2
 192.168.1.21,Samba Heap Overflow,Medium,6.5,ID.AM,Remediated,3/15/2026,CVE-2021-44142,4/10/2026,3,2,2
+192.168.1.22,Missing Patch Management Process,High,7.2,PR.IP,Open,2026-04-01,CVE-2023-44487,,4,3,2
+192.168.1.23,No Continuous Log Monitoring,Medium,5.5,DE.CM,Open,2026-04-05,CVE-2023-20198,,3,3,1
+192.168.1.24,No Incident Response Plan Tested,Medium,4.8,RS.RP,Open,2026-04-10,CVE-2022-26134,,3,2,1
