@@ -154,13 +154,18 @@ def render_sla_breach_alerts(df):
             "Days_Open", "SLA_Limit", "Days_Overdue"]
     cols = [c for c in cols if c in breached.columns]
 
+   def _color_overdue(val):
+        if val > 60:  return "background-color:#E24B4A;color:white"
+        if val > 30:  return "background-color:#EF9F27"
+        if val > 0:   return "background-color:#FAC775"
+        return ""
+
     st.dataframe(
         breached[cols]
         .sort_values("Days_Overdue", ascending=False)
-        .style.background_gradient(subset=["Days_Overdue"], cmap="Reds"),
+        .style.map(_color_overdue, subset=["Days_Overdue"]),
         use_container_width=True,
     )
-
 
 def render_severity_and_nist(df):
     c1, c2 = st.columns(2)
