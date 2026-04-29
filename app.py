@@ -165,7 +165,7 @@ def _color_overdue(val):
         .sort_values("Days_Overdue", ascending=False)
         .style.map(_color_overdue, subset=["Days_Overdue"]),
         use_container_width=True,
-    )
+    	)
 
 def render_severity_and_nist(df):
     c1, c2 = st.columns(2)
