@@ -4,4 +4,3 @@ plotly
 python-nmap
 requests
 xlsxwriter
-matplotlib
