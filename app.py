@@ -50,7 +50,7 @@ def get_cisa_kev():
 
 def get_local():
     try:
-        df = pd.read_csv("vulnerabilities.csv")
+        df = pd.read_csv("vulnerabilities.csv", sep=None, engine="python")
         df["CVSS_Score"]     = pd.to_numeric(df["CVSS_Score"],    errors="coerce")
         df["Impact"]         = pd.to_numeric(df["Impact"],         errors="coerce")
         df["Likelihood"]     = pd.to_numeric(df["Likelihood"],     errors="coerce")
@@ -154,17 +154,17 @@ def render_sla_breach_alerts(df):
             "Days_Open", "SLA_Limit", "Days_Overdue"]
     cols = [c for c in cols if c in breached.columns]
 
-def _color_overdue(val):
-    if val > 60:  return "background-color:#E24B4A;color:white"
-    if val > 30:  return "background-color:#EF9F27"
-    if val > 0:   return "background-color:#FAC775"
-    return ""
+    def _color_overdue(val):
+        if val > 60:  return "background-color:#E24B4A;color:white"
+        if val > 30:  return "background-color:#EF9F27"
+        if val > 0:   return "background-color:#FAC775"
+        return ""
 
     st.dataframe(
-    breached[cols]
-    .sort_values("Days_Overdue", ascending=False)
-    .style.map(_color_overdue, subset=["Days_Overdue"]),
-    use_container_width=True,
+        breached[cols]
+        .sort_values("Days_Overdue", ascending=False)
+        .style.map(_color_overdue, subset=["Days_Overdue"]),
+        use_container_width=True,
     )
 
 def render_severity_and_nist(df):
@@ -413,7 +413,7 @@ def render_compliance(df):
         )
         iso_summary["Avg_CVSS"] = iso_summary["Avg_CVSS"].round(1)
 
-        unique_domains = df["ISO_Control"].nunique()
+        unique_domains = df["ISO_Control"] != "Not mapped"]["ISO_Control"].nunique()
         total_domains  = 14  # ISO 27001 has 14 Annex A domains
         iso_pct = int((unique_domains / total_domains) * 100)
 
