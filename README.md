@@ -5,6 +5,7 @@
 [![Streamlit](https://img.shields.io/badge/Built%20with-Streamlit-red?style=flat-square)](https://streamlit.io)
 [![NIST CSF](https://img.shields.io/badge/Framework-NIST%20CSF-blue?style=flat-square)](https://www.nist.gov/cyberframework)
 [![ISO 27001](https://img.shields.io/badge/Framework-ISO%2027001-purple?style=flat-square)](https://www.iso.org/isoiec-27001-information-security.html)
+![Dashboard Screenshot](screenshot.png)
 
 A live, automated Governance, Risk & Compliance (GRC) dashboard built in Python and Streamlit. Ingests vulnerability scan data, cross-references against the CISA Known Exploited Vulnerabilities (KEV) catalog in real time, calculates weighted risk scores, and tracks remediation performance against industry SLA standards — mapped to both NIST CSF and ISO 27001.
 
